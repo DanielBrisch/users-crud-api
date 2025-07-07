@@ -3,8 +3,6 @@
 
 A RESTful API built in Go for user management with JWT authentication, role-based access control (admin/user), request logging to MongoDB, and Swagger documentation.
 
----
-
 ## ✨ Features
 
 - User registration and login
@@ -15,8 +13,6 @@ A RESTful API built in Go for user management with JWT authentication, role-base
 - Admin-only role promotion endpoint
 - Request logging to MongoDB (via Logrus)
 - Swagger documentation with live interface
-
----
 
 ## 🧰 Middleware Overview
 
@@ -38,7 +34,7 @@ Enables Cross-Origin Resource Sharing so the API can be consumed from web fronte
 Basic rate limiting to prevent abuse (e.g. too many login attempts). Helps reduce load and brute-force risk.
 
 Each middleware is registered globally in `server.Router()`:
-```go
+
 r.Use(MiddlewareLogger())
 r.Use(MiddlewareRecovery())
 r.Use(MiddlewareCORS())
