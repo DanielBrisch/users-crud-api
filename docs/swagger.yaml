@@ -1,0 +1,312 @@
+basePath: /api
+definitions:
+  LoginRequest:
+    properties:
+      email:
+        example: daniel@email.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  RegisterRequest:
+    properties:
+      email:
+        example: daniel@email.com
+        type: string
+      name:
+        example: Daniel
+        minLength: 2
+        type: string
+      password:
+        example: "123456"
+        minLength: 6
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  UpdateRoleInput:
+    properties:
+      role:
+        enum:
+        - admin
+        - user
+        example: admin
+        type: string
+    required:
+    - role
+    type: object
+  UpdateUserInput:
+    properties:
+      email:
+        example: novo@email.com
+        type: string
+      name:
+        example: Daniel Atualizado
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: daniel@example.com
+    name: Daniel Dev
+  description: API de gerenciamento de usuários com JWT e roles.
+  termsOfService: http://localhost
+  title: Users API
+  version: "1.0"
+paths:
+  /admin/users/{id}/role:
+    put:
+      consumes:
+      - application/json
+      description: Somente administradores podem alterar o role
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Novo role do usuário
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRoleInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Atualiza o papel (role) de um usuário
+      tags:
+      - Admin
+  /get-all:
+    get:
+      description: Retorna todos os usuários cadastrados
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lista todos os usuários
+      tags:
+      - Users
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Realiza autenticação e retorna o token JWT
+      parameters:
+      - description: Credenciais de login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login do usuário
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Registra um novo usuário comum
+      parameters:
+      - description: Dados de registro
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cria um novo usuário
+      tags:
+      - Auth
+  /users/{id}:
+    delete:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Remove um usuário
+      tags:
+      - Admin
+    get:
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Busca um usuário por ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados para atualizar
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Atualiza dados de um usuário
+      tags:
+      - Users
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
