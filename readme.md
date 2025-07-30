@@ -1,4 +1,3 @@
-````markdown
 # Users CRUD API 🧑‍💻
 
 A RESTful API built in Go for user management with JWT authentication, role-based access control (admin/user), request logging to MongoDB, and Swagger documentation.
@@ -39,7 +38,6 @@ r.Use(MiddlewareLogger())
 r.Use(MiddlewareRecovery())
 r.Use(MiddlewareCORS())
 r.Use(MiddlewareRateLimit())
-````
 
 ---
 
@@ -58,7 +56,6 @@ r.Use(MiddlewareRateLimit())
 
 ## 📁 Project Structure
 
-```
 users-crud/
 ├── cmd/              # App entry point
 ├── internal/
@@ -76,7 +73,6 @@ users-crud/
 ├── go.mod
 ├── Dockerfile
 └── .env
-```
 
 ---
 
